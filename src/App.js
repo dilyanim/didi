@@ -11,12 +11,24 @@ const App = () => {
   const addMenuItem = (item) => {
     setMenuItems([...menuItems, item]);
   };
+  const [task ,setTask] = useState([])
+  function add(){
+    const addTask = {
+      id:  Date.now(),
+      img: menuItems.map(el => el.image),
+      name: menuItems.map(el => el.name),
+      sum: menuItems.map(el => el.price),
+    }
+    setTask([...task , addTask]);
+  }
+  console.log('task',task);
+
   return (
     <div className="App">
       <Header />
       <Routes>
-        <Route path="/" element={<Menu menuItems={menuItems} />} />
-        <Route path="/order" element={<Orders />} />
+        <Route path="/" element={<Menu add={add} menuItems={menuItems} />} />
+        <Route path="/order" element={<Orders task={task} onAddMenuItem={addMenuItem} />} />
         <Route path="/admin" element={<Admin onAddMenuItem={addMenuItem} />} />
       </Routes>
     </div>

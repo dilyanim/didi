@@ -1,123 +1,151 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ActionTypes } from "../../redux/Reducer/ActionTypes";
-import { MdDeleteOutline } from "react-icons/md";
-
-const Basket = () => {
+import { NavLink } from "react-router-dom";
+import { AiFillDelete } from "react-icons/ai";
+const Order = ({ task }) => {
+  const balance = useSelector((state) => {
+    console.log(state);
+    return state.money;
+  });
   const dispatch = useDispatch();
 
-  const save = (favorite) => {
-    localStorage.setItem("basket", JSON.stringify(favorite));
-  };
-
-  const basket = useSelector((state) => {
-    return state.basket.basket;
-  });
-
-  useEffect(() => {
-    save(basket);
-  }, [basket]);
-
-  useEffect(() => {
-    dispatch({ type: ActionTypes.ADD_TO_BASKET, payload: basket });
-  }, [dispatch]);
-
-  const addToBaskets = (el) => {
-    dispatch({ type: ActionTypes.ADD_TO_BASKET, payload: el });
-  };
-
-  const addToBaskets1 = (el) => {
-    dispatch({ type: ActionTypes.ADD_TO_BASKETS, payload: el });
-  };
-
   return (
-    <div id="basket">
-      <div className="container">
-        <div className="relative overflow-x-auto py-10">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-white dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-20 py-3 text-2xl">
-                  Product name
-                </th>
-                <th scope="col" className="px-6 py-3 text-2xl">
-                  Image
-                </th>
-                <th scope="col" className="px-6 py-3 text-2xl">
-                  Count
-                </th>
-                <th scope="col" className="px-6 py-3 text-2xl">
-                  Price
-                </th>
-                <th
-                  onClick={() => {
-                    dispatch({ type: ActionTypes.DELETE_FAVORITE });
-                    localStorage.removeItem("basket");
-                  }}
-                  style={{
-                    cursor: "pointer",
-                  }}
-                  scope="col"
-                  className="px-6 py-3 text-2xl"
-                >
-                  <MdDeleteOutline />
-                </th>
-              </tr>
-            </thead>
-            <tbody className="">
-              {basket.slice(1, basket.length + 1).map((el) => (
-                <tr className="bg-white dark:bg-white" key={el.id}>
-                  <td
-                    scope="row"
-                    className="px-6 py-4 text-2xl font-medium text-gray-900 whitespace-nowrap dark:text-black"
-                  >
-                    {el.title}
-                  </td>
-                  <td className="px-6 py-4 text-2xl">
-                    <img
-                      style={{
-                        borderRadius: "20px",
-                      }}
-                      width={200}
-                      src={el.image}
-                      alt=""
-                    />
-                  </td>
-                  <td className="px-6 py-4 text-2xl">
-                    <div className="flex m-40">
-                      <button
+    <div id="order">
+      <div className="container"></div>
+      <div className="order">
+        <h1>MY ORDERS</h1>
+        <div>{task.title}</div>
+        {task.map((el) => (
+          <div key={el.id}>
+            <h1>{el.name}</h1>
+            <p>{el.price}</p>
+
+            <img src={el.image} />
+            <div className="flex m-40">
+              <button
                         style={{
                           display: el.count === 1 ? "none" : "block",
                         }}
                         className="btn2"
-                        onClick={() => addToBaskets1(el)}
                       >
                         -
                       </button>
-                      <h1
-                        style={{
-                          fontSize: "30px",
-                        }}
-                        className="m-2"
-                      >
-                        {el.count}
-                      </h1>
-                      <button className="btn1" onClick={() => addToBaskets(el)}>
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-2xl">
+              <h1
+                style={{
+                  fontSize: "30px",
+                }}
+                className="m-2"
+              >
+                {el.price}
+              </h1>
+              <button className="btn1">+</button>
+            </div>
+            {/* <td className="px-6 py-4 text-2xl">
                     $ {el.price * el.count}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  </td> */}
+          </div>
+        ))}
+        <NavLink to={"/"}>
+          <button className="order-btn">TO ORDER</button>
+        </NavLink>
       </div>
     </div>
   );
 };
 
-export default Basket;
+export default Order;
+// import React, { useEffect } from 'react';
+// import { useSelector, useDispatch } from 'react-redux';
+// import { removeFromCart, increaseProductCount, decreaseProductCount, addToCart } from '../../redux/Reducer/ActionTypes';
+// import { NavLink } from 'react-router-dom';
+
+// const saveOrder = (orderData) => {
+//   localStorage.setItem('cart', JSON.stringify(orderData));
+// };
+
+// const Order = () => {
+//   const cart = useSelector((state) => state.order.cart);
+//   const dispatch = useDispatch();
+//   let total=0;
+
+//   const removeProduct = (productId) => {
+//     dispatch(removeFromCart(productId));
+//     localStorage.removeItem("cart")
+//   };
+
+//   const increaseQuantity = (productId) => {
+//     dispatch(increaseProductCount(productId));
+//   };
+
+//   const decreaseQuantity = (productId) => {
+//     dispatch(decreaseProductCount(productId));
+//   };
+
+//   useEffect(() => {
+//     const local = localStorage.getItem('cart');
+//     if (local && local !== 'null') {
+//       dispatch(addToCart(local));
+//     }
+//   }, [dispatch]);
+
+// useEffect(() => {
+//   saveOrder(cart)
+// }, [cart]);
+
+//   return (
+//     <div id="order" className="bg-blue-300">
+//       <center><h1>MY ORDERS</h1></center>
+//       <div className="container">
+//         <div className="order">
+//           <ul>
+//             {cart && cart.length > 0 ? (
+//               cart.map((product) => {
+//                 total += product.price * (product.quantity);
+//                 return (
+//                   <li key={product.id}>
+//                     <div className="order-block">
+//                       <img src={product.image} alt="" />
+//                       <div className="order-title">
+//                         <h1>{product.title}</h1>
+//                         <h3>{product.price * (product.quantity || 1)}$</h3>
+//                       </div>
+//                       <div className="order-btn">
+//                         <button onClick={() => removeProduct(product.id)} className="btn-delete">
+//                           Delete Order
+//                         </button>
+//                         <div className="btn-bottom">
+//                           <button
+//                             style={{ display: product.quantity === 1 ? "none" : "block" }}
+//                             onClick={() => decreaseQuantity(product.id)} className="btn-minus">
+//                             -
+//                           </button>
+//                           <h3>{product.quantity || 1}</h3>
+//                           <button onClick={() => increaseQuantity(product.id)} className="btn-plus">
+//                             +
+//                           </button>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </li>
+//                 );
+//               })
+//             ) : (
+//               <p>Your order is empty</p>
+//             )
+//             }
+//           </ul>
+//           {cart.length > 0 && (
+//            <div className="total">
+//             <p style={{margin:"50px 0 0 710px"}}>Total: {total}$</p>
+//            <NavLink to="/menu">
+//             <button className="to-order">to order</button>
+//            </NavLink>
+//            </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Order;
